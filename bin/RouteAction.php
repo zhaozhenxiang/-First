@@ -29,7 +29,12 @@
     //@todo 这里应该使用反射
     private function doClassMethod($class, $method)
     {
+        try {
+            include_once  BASH_PATH . '/app/Controller/' . $class . '.php';
+        } catch(\Exception $e) {
+            throw($e);
+        }
         $instance = new $class;
-        return $instnce->$method();
+        return $instance->$method();
     }
  }
