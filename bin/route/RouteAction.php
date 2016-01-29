@@ -30,11 +30,20 @@
     private function doClassMethod($class, $method)
     {
         try {
-            include_once  BASH_PATH . '/app/Controller/' . $class . '.php';
+            include_once  basePath() . '/app/Controller/' . $class . '.php';
         } catch(\Exception $e) {
             throw($e);
         }
+
         $instance = new $class;
-        return $instance->$method();
+        $response = $instance->$method();
+
+        if ($response instanceof View) {
+            include_once basePath() . '/bin/view/Compiler.php';
+            $compiler = new Compiler($response);
+            return $compiler->getPHP();
+        } else {
+            return $response;
+        }
     }
  }

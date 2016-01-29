@@ -5,12 +5,11 @@ define('BASH_PATH', dirname(__DIR__));
 require BASH_PATH . '/bin/autoload.php';
 //加载函数
 //@todo 以后应该放入composer中
-require BASH_PATH . '/bin/helpers.php';
+require BASH_PATH . '/bin/func/helpers.php';
 
 //加载路由类
-require BASH_PATH . '/bin/Route.php';
-require BASH_PATH . '/app/routes.php';
-require BASH_PATH . '/bin/RouteAction.php';
-
+require basePath() . '/bin/route/Route.php';
+require basePath() . '/bin/route/RouteAction.php';
+//加载路由
+require basePath() . '/app/routes.php';
 echo RouteAction::action();
-
