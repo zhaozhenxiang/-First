@@ -11,7 +11,11 @@ class Compiler
 
     public function getPHP()
     {
-        extract($this->view->getData());
-        include $this->view->getView();
+        try {
+            extract($this->view->getData());
+            include $this->view->getView();
+        } catch (\Exception $e) {
+            throw new \Exception('View Compiler Error', 1);
+        }
     }
 }
