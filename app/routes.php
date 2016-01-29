@@ -1,6 +1,7 @@
 <?php
-Route::get('/a', function(){
+$route = new \Bin\Route\Route();
+$route::get('/a', function(){
     return __LINE__;
 });
 
-Route::get('/b', 'AA@BB');
+$route::get('/b', 'AA@BB');

@@ -1,4 +1,5 @@
 <?php
+namespace Bin\View;
 
 class Compiler
 {
@@ -13,9 +14,12 @@ class Compiler
     {
         try {
             extract($this->view->getData());
-            include $this->view->getView();
+
+            require_once $this->view->getView();
         } catch (\Exception $e) {
             throw new \Exception('View Compiler Error', 1);
         }
+
+        return '';
     }
 }

@@ -1,6 +1,8 @@
- <?php
- class RouteAction
- {
+<?php
+namespace Bin\Route;
+
+class RouteAction
+{
     public function __construct()
     {
 
@@ -29,21 +31,17 @@
     //@todo 这里应该使用反射
     private function doClassMethod($class, $method)
     {
-        try {
-            include_once  basePath() . '/app/Controller/' . $class . '.php';
-        } catch(\Exception $e) {
-            throw($e);
-        }
-
+        $class = '\App\Controllers\\' . $class;
         $instance = new $class;
         $response = $instance->$method();
 
-        if ($response instanceof View) {
-            include_once basePath() . '/bin/view/Compiler.php';
-            $compiler = new Compiler($response);
+        if ($response instanceof \Bin\View\View) {
+            $compiler = new \Bin\View\Compiler($response);
+
             return $compiler->getPHP();
         } else {
+
             return $response;
         }
     }
- }
+}

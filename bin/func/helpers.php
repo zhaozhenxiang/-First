@@ -15,7 +15,7 @@ if (!function_exists('getMethod')) {
 if (!function_exists('basePath')) {
     function basePath()
     {
-        return BASH_PATH;
+        return BASE_PATH;
     }
 }
 //

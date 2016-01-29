@@ -1,6 +1,8 @@
- <?php
- class Route
- {
+<?php
+namespace Bin\Route;
+
+class Route
+{
     //使用单例模式
     private static $instance;
     private static $route = [];
@@ -12,9 +14,9 @@
     public function __construct()
     {
         // if (self::$instance instanceof $this) {
-            // return self::$instance;
+        // return self::$instance;
         // }
-        
+
     }
 
     public static function getRoute()
@@ -29,22 +31,22 @@
     {
         foreach (self::$route as $key => $value) {
             //需要index.php来控制rewrite
-            if ($value['method'] == $method && ($value['path'] === $path || '/index.php' .$value['path'] ===  $path)) {
-                return  $value;
+            if ($value['method'] == $method && ($value['path'] === $path || '/index.php' . $value['path'] === $path)) {
+                return $value;
             }
         }
 
         throw new Exception("ROUTE NO MATCH", 1);
     }
 
-/*    public function getInstance()
-    {
-        if (self::$instance instanceof $this) {
-            return self::$instance;
-        }
+    /*    public function getInstance()
+        {
+            if (self::$instance instanceof $this) {
+                return self::$instance;
+            }
 
-        return new static;
-    }*/
+            return new static;
+        }*/
 
 
     private static function action($method, $path, $action)
@@ -72,4 +74,4 @@
     {
         self::action('POST', $path, $param);
     }
- }
+}

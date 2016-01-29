@@ -1,4 +1,6 @@
- <?php
+<?php
+ namespace Bin\App;
+
  //好像没有什么作用
  class App
  {
@@ -11,9 +13,6 @@
         if (self::$instance instanceof $this) {
             return self::$instance;
         }
-
-
-
     }
 
     public function getInstance()

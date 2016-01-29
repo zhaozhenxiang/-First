@@ -1,4 +1,5 @@
 <?php
+namespace Bin\Model;
 
 class Connection
 {
@@ -18,8 +19,8 @@ class Connection
         }
 
         $config = self::$config;
-        $dbh = new PDO($config['dsn'], $config['user'], $config['password']);
-        $dbh->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+        $dbh = new \PDO($config['dsn'], $config['user'], $config['password']);
+        $dbh->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
 
         return self::$connection = $dbh;
 //        return self::$conncection = $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

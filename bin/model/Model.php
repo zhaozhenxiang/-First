@@ -1,5 +1,5 @@
 <?php
-
+namespace Bin\Model;
 abstract class Model
 {
     private static $connection;
@@ -29,7 +29,6 @@ abstract class Model
             'password' => $config['pass']
         ];
 
-        include_once basePath() . '/bin/model/Connection.php';
         return self::$connection = (new Connection($conConfig))->connection();
     }
 

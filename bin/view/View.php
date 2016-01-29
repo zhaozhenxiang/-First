@@ -1,7 +1,9 @@
 <?php
+namespace Bin\View;
+
 class View
 {
-    const viewPath = BASH_PATH . '/public/views/';
+    const viewPath = BASE_PATH . '/public/views/';
     private static $targetView;
     private static $targetData = [];
     private static $instance;
@@ -36,5 +38,10 @@ class View
     public function getData()
     {
         return self::$targetData;
+    }
+
+    public function __toString()
+    {
+        return (new Compiler($this))->getPHP();
     }
 }
