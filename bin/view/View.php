@@ -3,7 +3,7 @@ namespace Bin\View;
 
 class View
 {
-    const viewPath = BASE_PATH . '/public/views/';
+    const viewPath = BASE_PATH . '/views/';
     private static $targetView;
     private static $targetData = [];
     private static $instance;
