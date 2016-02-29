@@ -36,7 +36,7 @@ class Route
             }
         }
 
-        throw new Exception("ROUTE NO MATCH", 1);
+        throw new \Exception("ROUTE NO MATCH", 1);
     }
 
     /*    public function getInstance()
