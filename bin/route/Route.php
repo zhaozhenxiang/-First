@@ -85,7 +85,7 @@ class Route
         $callback();
         $nowRouteCount = count(self::$route);
 
-        for ($i = $nowRouteCount - $currentRouteCount - 1; $i < $nowRouteCount; $i++) {
+        for ($i = $currentRouteCount; $i < $nowRouteCount; $i++) {
             self::$route[$i]['middle'] = $param;
         }
     }
@@ -93,6 +93,9 @@ class Route
     //todo 处理多个get的router
     public static function getArray(array $param)
     {
+        foreach ($param as $key => $item) {
+            self::action('GET', $key, $item);
+        }
     }
 
     public static function __callStatic($method, $param)

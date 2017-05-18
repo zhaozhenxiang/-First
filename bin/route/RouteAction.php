@@ -28,7 +28,7 @@ class RouteAction
             }
             //key为middleware名字，value为middleware参数
             $handleResult = (new $class)->run(array_shift($param));
-            
+
             if (TRUE !== $handleResult) {
                 return new \Bin\Response\Response($handleResult);
             }
@@ -45,11 +45,10 @@ class RouteAction
         }
 
 
-
         throw new Exception("404", 1);
     }
 
-    private function doCallBack(callable $action)
+    private static function doCallBack(callable $action)
     {
         // return call_user_func($action);
         return $action();

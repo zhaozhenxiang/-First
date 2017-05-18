@@ -4,17 +4,28 @@ namespace Bin\View;
 class View
 {
     const viewPath = BASE_PATH . '/views/';
+    const viewSuffix = '.php';
     private static $targetView;
     private static $targetData = [];
     private static $instance;
+
 
     public function __construct()
     {
 
     }
 
+    /**
+     * @power 处理path
+     * @param $path
+     * @return View
+     */
     public static function make($path)
     {
+        if (FALSE == preg_match('/.+?\.php/', $path)) {
+            $path .= \Bin\View\View::viewSuffix;
+        }
+
         self::$targetView = self::viewPath . $path;
 
         return is_null(self::$instance) ? new self : self::$instance;
