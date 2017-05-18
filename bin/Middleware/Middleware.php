@@ -10,10 +10,33 @@ namespace Bin\Middleware;
 
 abstract class Middleware
 {
-    //todo 需要构思一下
-    private $mapping = [
 
-    ];
+    /**
+     * @power 获取上下文
+     */
+    protected function getContext()
+    {
+        return;
+    }
 
+    /**
+     * @power
+     * @return 该函数函数返回TRUE该可以继续
+     */
+    protected abstract function handle(array $param);
 
+    /**
+     * @power 调用入口
+     * @return mixed
+     */
+    public function run(array $param)
+    {
+
+        return $assert = static::handle($param);
+
+        //todo 处理handle的返回值
+        if (TRUE ===  $assert) {
+
+        }
+    }
 }

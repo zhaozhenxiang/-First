@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ALL || ~E_NOTICE);
+error_reporting(E_ALL ^ E_NOTICE);
 define('START_TIME', time());
 //注册地址
 define('BASE_PATH', dirname(__DIR__));

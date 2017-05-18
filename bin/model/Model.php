@@ -12,7 +12,7 @@ abstract class Model
 
     }
 
-    public function getConnection()
+    public static function getConnection()
     {
         if (!is_null(self::$connection)) {
             return self::$connection;
@@ -32,7 +32,7 @@ abstract class Model
         return self::$connection = (new Connection($conConfig))->connection();
     }
 
-    private function getDBConfig()
+    private static function getDBConfig()
     {
         $driver = config('db:driver');
         self::$resultType = config('db:resultType');

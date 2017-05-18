@@ -14,12 +14,37 @@ class RouteAction
     {
         $actionAy = Route::getRoute();
 
+        //先处理middle
+        if (isset($actionAy['middle'])) {
+            $param = $actionAy['middle'];
+            if (1 != count($param)) {
+                throw new \Exception('middle param count must one');
+            }
+            //查看是否存在
+            $class = (new \App\Middleware\Middle())->getClass(array_keys($param)[0]);
+
+            if (FALSE == $class){
+                throw new \Exception('middleware miss');
+            }
+            //key为middleware名字，value为middleware参数
+            $handleResult = (new $class)->run(array_shift($param));
+            
+            if (TRUE !== $handleResult) {
+                return new \Bin\Response\Response($handleResult);
+            }
+        }
+
+        //处理闭包
         if (is_callable($actionAy['action'])) {
             return self::doCallBack($actionAy['action']);
-        } elseif (is_string($actionAy['action'])) {
+        }
+        //处理常规
+        if (is_string($actionAy['action'])) {
             list($class, $method) = explode('@', $actionAy['action']);
             return self::doClassMethod($class, $method);
         }
+
+
 
         throw new Exception("404", 1);
     }
@@ -31,7 +56,7 @@ class RouteAction
     }
 
     //@todo 这里应该使用反射
-    private function doClassMethod($class, $method)
+    private static function doClassMethod($class, $method)
     {
         $class = '\App\Controllers\\' . $class;
         //todo 反射class的构造函数的参数

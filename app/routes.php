@@ -11,6 +11,9 @@ $route::get('/rel', 'AA@rel');
 $route::post('/post/1', 'AA@postA');
 
 //todo 开始处理middle相关的代码
-$route::middle([], function() use ($route){
+$route::middle(['a' => [1, 2]], function() use ($route){
     $route::get('/middle/1', 'AA@middle');
 });
+
+//todo 处理多个router
+$route::getArray(['/rel' => 'AA@rel']);
