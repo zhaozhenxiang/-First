@@ -1,6 +1,8 @@
 <?php
 namespace Bin\Route;
 
+use Bin\Response\Response;
+
 class RouteAction
 {
     public function __construct()
@@ -32,16 +34,10 @@ class RouteAction
     private function doClassMethod($class, $method)
     {
         $class = '\App\Controllers\\' . $class;
+        //todo 反射class的构造函数的参数
         $instance = new $class;
+        //todo 反射method函数的参数
         $response = $instance->$method();
-
-        if ($response instanceof \Bin\View\View) {
-            $compiler = new \Bin\View\Compiler($response);
-
-            return $compiler->getPHP();
-        } else {
-
-            return $response;
-        }
+        echo new Response($response);
     }
 }

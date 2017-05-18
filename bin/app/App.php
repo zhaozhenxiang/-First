@@ -1,9 +1,9 @@
 <?php
- namespace Bin\App;
+namespace Bin\App;
 
- //好像没有什么作用
- class App
- {
+//好像没有什么作用
+class App
+{
     //使用单例模式
     private static $instance;
 
@@ -24,4 +24,4 @@
 
 
     // private function 
- }
+}
