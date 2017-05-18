@@ -15,5 +15,5 @@ abstract class Middleware
 
     ];
 
-    
+
 }
