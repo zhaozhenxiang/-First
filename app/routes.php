@@ -23,3 +23,18 @@ $route::get('/get/200', function(){
     return ((new \Bin\Response\Response())->setStatus('200'));
 });
 
+//使用app容器类
+$route::get('/get/app', function(){
+    var_dump(\Bin\App\App::make(\App\Model\User::class) === \Bin\App\App::make(\App\Model\User::class));
+});
+
+//request
+$route::get('/get/request', function(){
+    $a = new \Bin\Request\Request;
+    var_dump($a->getHeader());
+    var_dump($a->getPath());
+    var_dump($a->getStartTime());
+    var_dump($a->getRequestType());
+    var_dump($a->getData());
+    var_dump($a->getField('a'));
+});

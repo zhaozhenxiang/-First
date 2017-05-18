@@ -24,7 +24,7 @@ class Request implements \ArrayAccess
     //获取头信息
     public function getHeader()
     {
-        return get_headers();
+        return $_SERVER;
     }
 
     //获取请求路径

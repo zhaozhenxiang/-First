@@ -2,7 +2,7 @@
 if (!function_exists('getUrl')) {
     function getUrl()
     {
-        return $_SERVER['REQUEST_URI'];
+        return $_SERVER['PATH_INFO'];
     }
 }
 
