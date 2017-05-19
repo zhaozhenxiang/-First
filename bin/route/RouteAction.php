@@ -21,8 +21,7 @@ class RouteAction
                 throw new \Exception('middle param count must one');
             }
             //查看是否存在
-            $class = (new \App\Middleware\Middle())->getClass(array_keys($param)[0]);
-
+            $class = (new \App\Middleware\Middle())->getClass(array_keys($param['middle'])[0]);
             if (FALSE == $class){
                 throw new \Exception('middleware miss');
             }

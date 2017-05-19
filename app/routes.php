@@ -38,10 +38,9 @@ $route::get('/get/request', function(){
     var_dump($a->getData());
     var_dump($a->getField('a'));
     spl_autoload_register();
-var_dump(spl_autoload_functions());
-
-
+    var_dump(spl_autoload_functions());
     var_dump(app('Request'));
+    app('Request')->getPath();
     app('Request')->getPath();
     var_dump(\Request::getPath());
 });
