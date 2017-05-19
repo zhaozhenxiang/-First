@@ -3,119 +3,132 @@ namespace Bin\Route;
 
 class Route
 {
-    //使用单例模式
-    private static $instance;
-    private static $route = [];
-    private static $method = [
-        'get',
-        'post'
-    ];
+    private $param = [];
 
-    public function __construct()
+    public function __construct($method, $path, $action)
     {
         // if (self::$instance instanceof $this) {
         // return self::$instance;
         // }
-
+        $this->param = [
+            'method' => $method,
+            'path' => $path,
+            'action' => $action,
+        ];
     }
 
     /**
-     * @power 获取匹配到的路由
+     * @power 合并数据
+     * @param array $param
+     */
+    private function mergeParam(array $param)
+    {
+        $this->param = array_merge($this->param, $param);
+    }
+
+    /**
+     * @power 获取当前的url
      * @return mixed
      * @throws \Exception
      */
-    public static function getRoute()
+    public function getPath()
     {
-        $path = getUrl();
-        $method = getMethod();
-
-        return self::match($method, $path);
+        return $this->param['path'];
     }
 
-    private static function match($method, $path)
+    /**
+     * @power 获取当前的METHOD
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getMethod()
     {
-        foreach (self::$route as $key => $value) {
-            //需要index.php来控制rewrite
-            if ($value['method'] == $method && ($value['path'] === $path || '/index.php' . $value['path'] === $path)) {
-                return $value;
-            }
+        return $this->param['method'];
+    }
+
+
+    /**
+     * @power 获取当前的action
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getAction()
+    {
+        return $this->param['action'];
+    }
+
+
+    /**
+     * @power 获取当前的middle
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getMiddle()
+    {
+        return isset($this->param['middle']) ? $this->param['middle'] : NULL;
+    }
+
+    /**
+     * @power 判断url是否满足正则
+     * @param $preg
+     * @return boolean
+     */
+    public function with($preg)
+    {
+        $this->mergeParam(['preg' => $preg]);
+    }
+
+    /**
+     * @power 设置middle
+     * @param array $middle
+     */
+    public function middle(array $middle)
+    {
+        $this->mergeParam(['middle' => $middle]);
+    }
+
+    /**
+     * @power 获取正则表达式
+     * @return null|string
+     */
+    public function getPreg()
+    {
+        return isset($this->param['preg']) ? $this->param['preg'] : NULL;
+    }
+    /**
+     * @power 判断url是否满足正则
+     * @power $url string
+     * @return boolean
+     */
+    public function withSuccess($url)
+    {
+        //从/a/11 => /a/{no}中获取match
+/*        $matchString = preg_replace('/{.+}/', $this->getPreg(), $this->getPath());
+        $matchString = quotemeta(ltrim($matchString, '/'));
+        var_dump($matchString);
+        $matchString = 'pick\/[0-9+]';
+        return preg_match('/' . $matchString . '/', $url);*/
+
+        //匹配url
+        $prefixString = preg_replace('/\{.+\}/', '', $this->getPath());
+
+        $string = preg_replace($prefixString, '', $url);
+        if (1 > strlen($string)) {
+            return FALSE;
+        }
+        if ('/' == $string[0]) {
+            $string = substr($string, 1, strlen($string) - 1);
         }
 
-        throw new \Exception("ROUTE NO MATCH", 1);
-    }
 
-    /*    public function getInstance()
-        {
-            if (self::$instance instanceof $this) {
-                return self::$instance;
-            }
-
-            return new static;
-        }*/
-
-
-    private static function action($method, $path, $action)
-    {
-        array_push(self::$route, ['method' => $method, 'path' => $path, 'action' => $action]);
-    }
-
-    //todo 处理middle
-    public static function middle(array $param, \Closure $callback)
-    {
-        /*        if (1 != count($param)) {
-                    throw new \Exception('middle param count must one');
-                }
-                //查看是否存在
-                $class = (new \App\Middleware\Middle())->getClass(array_keys($param)[0]);
-
-                if (FALSE == $class){
-                    throw new \Exception('middleware miss');
-                }
-                //key为middleware名字，value为middleware参数
-                $handleResult = (new $class)->run(array_shift($param));
-                if (TRUE == $handleResult) {
-                    return $callback();
-                }
-
-                return new \Bin\Response\Response($handleResult);*/
-
-        //先获取当前的路由个数，在获取之后的路由个数，然后给最后获取的路由处理一下
-        $currentRouteCount = count(self::$route);
-        //先获取本次的结果
-        $callback();
-        $nowRouteCount = count(self::$route);
-
-        for ($i = $currentRouteCount; $i < $nowRouteCount; $i++) {
-            self::$route[$i]['middle'] = $param;
-        }
-    }
-
-    //todo 处理多个get的router
-    public static function getArray(array $param)
-    {
-        foreach ($param as $key => $item) {
-            self::action('GET', $key, $item);
-        }
-    }
-
-    public static function __callStatic($method, $param)
-    {
-        if (!in_array(strtolower($method), self::$method)) {
-            throw new Exception("REQUEST METHOD NOT MATCH", 1);
+        if (TRUE == preg_match('/' . $this->getPreg() . '/', $string) > 0) {
+            \Bin\App\App::make(\Bin\Request\Request::class)['urlmatch'] = $string;
+            return TRUE;
         }
 
-        //@todo 解析$param 。 这的param应该是array
-        //@todo 大概是可以这么解析吧
-        self::action($method, $param[0], $param[1]);
+        return FALSE;
     }
 
-    public static function get($path, $param)
-    {
-        self::action('GET', $path, $param);
-    }
 
-    public static function post($path, $param)
-    {
-        self::action('POST', $path, $param);
-    }
 }
+

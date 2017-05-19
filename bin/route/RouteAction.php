@@ -12,11 +12,11 @@ class RouteAction
 
     public static function action()
     {
-        $actionAy = Route::getRoute();
+        $actionAy = RouteCollection::getRoute();
 
         //先处理middle
-        if (isset($actionAy['middle'])) {
-            $param = $actionAy['middle'];
+        if (FALSE == is_null($actionAy->getMiddle())) {
+            $param = $actionAy->getMiddle();
             if (1 != count($param)) {
                 throw new \Exception('middle param count must one');
             }
@@ -35,12 +35,12 @@ class RouteAction
         }
 
         //处理闭包
-        if (is_callable($actionAy['action'])) {
-            return self::doCallBack($actionAy['action']);
+        if (is_callable($actionAy->getAction())) {
+            return self::doCallBack($actionAy->getAction());
         }
         //处理常规
-        if (is_string($actionAy['action'])) {
-            list($class, $method) = explode('@', $actionAy['action']);
+        if (is_string($actionAy->getAction())) {
+            list($class, $method) = explode('@', $actionAy->getAction());
             return self::doClassMethod($class, $method);
         }
 

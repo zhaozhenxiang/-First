@@ -52,3 +52,14 @@ if (!function_exists('config')) {
     }
 }
 
+if (!function_exists('app')) {
+    /**
+     * @power ioc一些class
+     * @param $class
+     * @return mixed
+     */
+    function app($class)
+    {
+        return \Bin\App\App::make($class);
+    }
+}

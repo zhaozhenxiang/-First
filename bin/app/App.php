@@ -9,6 +9,17 @@ class App
     //container
     private static $container = [];
 
+    //自定义ioc的key
+    private static $classMap = [
+        'Request' => \Bin\Request\Request::class,
+        'Response' => \Bin\Response\Response::class,
+        'Route' => \Bin\Route\RouteCollection::class,
+    ];
+
+    private static $facadeMap = [
+        'Request' => \Bin\Facade\Request::class,
+    ];
+
     public function __construct()
     {
         if (self::$instance instanceof $this) {
@@ -23,6 +34,17 @@ class App
         }
     }
 
+    //facade
+    public static function facade($class)
+    {
+        if (!isset(self::$facadeMap[$class])) {
+            return;
+        }
+
+        if (is_file(BASE_PATH . DIRECTORY_SEPARATOR . self::$classMap[$class] . '.php')) {
+            class_alias(self::$facadeMap[$class], $class);
+        }
+    }
 
     /**
      * @power 将给定的class加载到static中
@@ -34,9 +56,24 @@ class App
         if (isset(self::$container[$class])) {
             return self::$container[$class];
         }
-
-        return self::$container[$class] = self::loadClass($class);
+        $instance = self::loadClass($class);
+        if (!is_null($instance)) {
+            return self::$container[$class] = $instance;
+        }
     }
+
+/*    PRIVATE static function findClass($class)
+    {
+        //使用map
+        //todo 这种信息是否应该放在composer中
+        if (isset(self::$classMap[$class])) {
+//            require_once BASE_PATH . DIRECTORY_SEPARATOR . self::$classMap[$class] . '.php';
+            return class_alias(self::$classMap[$class], $class, TRUE, TRUE);
+        }
+
+        is_file(BASE_PATH . DIRECTORY_SEPARATOR . $class) && require_once BASE_PATH . DIRECTORY_SEPARATOR . $class . '.php';
+
+    }*/
 
     /**
      * @power 加载一个类
@@ -46,6 +83,11 @@ class App
      */
     private static function loadClass($class)
     {
-        return new $class;
+        if (isset(self::$classMap[$class])) {
+//            class_alias(self::$classMap[$class], $class, TRUE);
+            if (is_file(BASE_PATH . DIRECTORY_SEPARATOR . self::$classMap[$class] . '.php') && require_once BASE_PATH . DIRECTORY_SEPARATOR . self::$classMap[$class] . '.php') {
+                return new self::$classMap[$class];
+            }
+        }
     }
 }

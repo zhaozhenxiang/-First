@@ -33,4 +33,9 @@ class AA extends BaseController
     {
         return 'middle';
     }
+
+    public function pick()
+    {
+        var_dump(__FILE__ . __FUNCTION__ . 'request => ' . \Bin\App\App::make(\Bin\Request\Request::class)['urlmatch']);
+    }
 }

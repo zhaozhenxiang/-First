@@ -1,5 +1,5 @@
 <?php
-$route = new \Bin\Route\Route();
+$route = new \Bin\Route\RouteCollection();
 $route::get('/get/callback', function(){
     return __LINE__;
 });
@@ -37,4 +37,14 @@ $route::get('/get/request', function(){
     var_dump($a->getRequestType());
     var_dump($a->getData());
     var_dump($a->getField('a'));
+    spl_autoload_register();
+var_dump(spl_autoload_functions());
+
+
+    var_dump(app('Request'));
+    app('Request')->getPath();
+    var_dump(\Request::getPath());
 });
+
+$route::get('/pick/{no}', 'AA@pick')->with('[0-9]+');
+

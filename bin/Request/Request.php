@@ -7,7 +7,7 @@ namespace Bin\Request;
  * Class Request
  * @package Bin\Request
  */
-class Request implements \ArrayAccess
+class Request implements \ArrayAccess, \Iterator
 {
     //数据存放属性
     protected $data = [];
@@ -19,6 +19,7 @@ class Request implements \ArrayAccess
     //初始化信息
     public function __construct()
     {
+//        is_null(self::$instance) && self::$instance = new static;
     }
 
     //获取头信息
@@ -30,7 +31,7 @@ class Request implements \ArrayAccess
     //获取请求路径
     public function getPath()
     {
-        return $_SERVER['REQUEST_URI'];
+        return trim($_SERVER['PATH_INFO'], '/');
     }
 
     //请求开始时间
@@ -42,7 +43,7 @@ class Request implements \ArrayAccess
     //获取请求类型
     public function getRequestType()
     {
-        return $_SERVER['REQUEST_METHOD'];
+        return trim($_SERVER['REQUEST_METHOD'], '/');
     }
 
     //获取请求全部信息
@@ -57,24 +58,75 @@ class Request implements \ArrayAccess
         return $this->data[$field];
     }
 
-    public function offsetExists($offset)
+    public function &__get($key)
     {
-
+        return $this->data[$key];
     }
 
-    public function offsetGet($offset)
+    public function __set($key, $value)
     {
+        $this->data[$key] = $value;
+    }
 
+    public function __isset($key)
+    {
+        return isset($this->data[$key]);
+    }
+
+    public function __unset($key)
+    {
+        unset($this->data[$key]);
     }
 
     public function offsetSet($offset, $value)
     {
+        if (is_null($offset)) {
+            $this->data[] = $value;
+        } else {
+            $this->data[$offset] = $value;
+        }
+    }
 
+    public function offsetExists($offset)
+    {
+        return isset($this->data[$offset]);
     }
 
     public function offsetUnset($offset)
     {
-
+        if ($this->offsetExists($offset)) {
+            unset($this->data[$offset]);
+        }
     }
 
+    public function offsetGet($offset)
+    {
+        return $this->offsetExists($offset) ? $this->data[$offset] : null;
+    }
+
+
+    public function rewind()
+    {
+        return reset($this->data);
+    }
+
+    public function current()
+    {
+        return current($this->data);
+    }
+
+    public function key()
+    {
+        return key($this->data);
+    }
+
+    public function next()
+    {
+        return next($this->data);
+    }
+
+    public function valid()
+    {
+        return key($this->data) !== null;
+    }
 }
