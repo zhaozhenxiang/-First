@@ -18,6 +18,7 @@
 * exception
 * log
 * session
+* php cli mode
 
 ####已完成的功能
 *

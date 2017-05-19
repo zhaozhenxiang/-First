@@ -29,7 +29,7 @@ trait Reflect
      * @param $class
      * @return null|\ReflectionClass
      */
-    private function getAbstractReflectionClass($class)
+    public function getAbstractReflectionClass($class)
     {
         //@todo 先在self::$class里面查找
         $keys = array_keys(self::$classReflection);

@@ -1,5 +1,6 @@
 <?php
 namespace App\Controllers;
+
 use \App\Model\User;
 
 class AA extends BaseController
@@ -22,6 +23,14 @@ class AA extends BaseController
         var_dump($class->getMethod('test')->isPublic());
         var_dump($class->getMethod('test')->getModifiers());
         var_dump($class->getMethod('test')->getDeclaringClass());
+        var_dump($class->getMethod('request')->getParameters());
+        foreach ($class->getMethod('request')->getParameters() as $key => $item) {
+            var_dump($item->getClass());
+        }
+
+        foreach ($class->getMethod('test')->getParameters() as $key => $item) {
+            var_dump($item->getClass());
+        }
     }
 
     public function postA()

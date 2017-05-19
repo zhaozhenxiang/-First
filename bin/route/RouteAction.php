@@ -2,7 +2,7 @@
 namespace Bin\Route;
 
 use Bin\Response\Response;
-
+use \Bin\Reflection\Reflection;
 class RouteAction
 {
     public function __construct()
@@ -54,13 +54,37 @@ class RouteAction
     }
 
     //@todo 这里应该使用反射
+//    private static function doClassMethod($class, $method)
+//    {
+//        $class = '\App\Controllers\\' . $class;
+//        //todo 反射class的构造函数的参数
+//        $instance = new $class;
+//        //todo 反射method函数的参数
+//        $response = $instance->$method();
+//        echo new Response($response);
+//    }
+//
     private static function doClassMethod($class, $method)
     {
+        $re = app(Reflection::class);
         $class = '\App\Controllers\\' . $class;
-        //todo 反射class的构造函数的参数
-        $instance = new $class;
-        //todo 反射method函数的参数
-        $response = $instance->$method();
-        echo new Response($response);
+
+        var_dump($re);
+        //反射的类,查看该文件是否存在
+        $reClass = $re->getAbstractReflectionClass($class);
+        //todo 没有处理class的构造函数的参数
+        $order = [];
+        foreach ($reClass->getMethod($method)->getParameters() as $key => $item) {
+            //没有找到该参数的类型=>null，表示该函数的参数类型是php内置类型
+            $tmp = $item->getClass();
+            if (is_null($tmp)) {
+                $tmp[] = NULL;
+                continue;
+            }
+
+            $order[] = app($tmp->getName());
+        }
+
+        echo new Response(call_user_func_array(array(new $class, $method), $order));
     }
 }

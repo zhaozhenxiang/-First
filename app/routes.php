@@ -47,3 +47,5 @@ $route::get('/get/request', function(){
 
 $route::get('/pick/{no}', 'AA@pick')->with('[0-9]+');
 
+//di
+$route::get('/get/di', 'BB@request');

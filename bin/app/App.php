@@ -83,6 +83,10 @@ class App
      */
     private static function loadClass($class)
     {
+        if (is_file(BASE_PATH . DIRECTORY_SEPARATOR . $class . '.php')) {
+            return new $class;
+        }
+
         if (isset(self::$classMap[$class])) {
 //            class_alias(self::$classMap[$class], $class, TRUE);
             if (is_file(BASE_PATH . DIRECTORY_SEPARATOR . self::$classMap[$class] . '.php') && require_once BASE_PATH . DIRECTORY_SEPARATOR . self::$classMap[$class] . '.php') {

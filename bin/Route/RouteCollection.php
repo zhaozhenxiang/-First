@@ -72,8 +72,8 @@ class RouteCollection /*implements \Iterator*/
             if (FALSE == is_null($value->getPreg())) {
                 if (TRUE == $value->withSuccess((\Bin\App\App::make(\Bin\Request\Request::class)->getPath()))) {
                     return $value;
-                } else {
-                    throw new \Exception("ROUTE NO MATCH, preg is error", 1);
+//                } else {
+//                    throw new \Exception("ROUTE NO MATCH, preg is error", 1);
                 }
             }
         }

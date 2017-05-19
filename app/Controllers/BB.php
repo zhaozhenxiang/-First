@@ -8,10 +8,10 @@
 
 namespace App\Controllers;
 
-
+use \Bin\Request\Request;
 class BB
 {
-    public function __construct($a)
+    public function __construct()
     {
         return [];
     }
@@ -19,5 +19,10 @@ class BB
     public function test($a)
     {
 
+    }
+
+    public function request(Request $a)
+    {
+        var_dump($a);
     }
 }
