@@ -37,12 +37,14 @@ class App
     //facade
     public static function facade($class)
     {
+        //先判断是否已经加载了
         if (!isset(self::$facadeMap[$class])) {
             return;
         }
 
         if (is_file(BASE_PATH . DIRECTORY_SEPARATOR . self::$classMap[$class] . '.php')) {
             class_alias(self::$facadeMap[$class], $class);
+            return self::$container[$class] = new $class;
         }
     }
 
@@ -58,6 +60,16 @@ class App
         }
         $instance = self::loadClass($class);
         if (!is_null($instance)) {
+            //查找是否有mapping
+            $mapping = array_filter(self::$classMap, function($v) use ($class) {
+                return $class === $v;
+            });
+
+            //设置别名
+            foreach ($mapping as $key => $val) {
+                self::$container[$key] = $instance;
+            }
+
             return self::$container[$class] = $instance;
         }
     }

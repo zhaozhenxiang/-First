@@ -19,11 +19,10 @@ abstract class Facade
     {
         if (!isset(self::$instance[static::class])) {
             $chindClass = (new static)->getClassName();
-            self::$instance[static::class] = new $chindClass;
+            self::$instance[static::class] = app($chindClass);
         }
 
         $instance = self::$instance[static::class];
-
         switch (count($args)) {
             case 0:
                 return $instance->$method();

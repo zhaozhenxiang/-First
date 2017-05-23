@@ -43,8 +43,19 @@ class AA extends BaseController
         return 'middle';
     }
 
-    public function pick()
+    public function pick($a, $b)
     {
-        var_dump(__FILE__ . __FUNCTION__ . 'request => ' . json_encode(\Bin\App\App::make(\Bin\Request\Request::class)['urlmatch']));
+        var_dump(app('Request')->getUrlParam(), \Request::getUrlParam());
+//        var_dump(__FILE__ . __FUNCTION__ . 'request => ' . json_encode(\Bin\App\App::make(\Bin\Request\Request::class)['urlMatch']) . json_encode(\Bin\App\App::make(\Bin\Request\Request::class)->getUrlParam()) . json_encode(app('Request')->getUrlParam()) . json_encode(\Request::getUrlParam()));
+//        var_dump('param 0 =>' . $a);
+//        var_dump('param 1 =>' . $b);
+    }
+
+    public function pickOne($a)
+    {
+        var_dump(app('Request')->getUrlParam(), \Request::getUrlParam());
+//        var_dump(__FILE__ . __FUNCTION__ . 'request => ' . json_encode(\Bin\App\App::make(\Bin\Request\Request::class)['urlMatch']) . json_encode(\Bin\App\App::make(\Bin\Request\Request::class)->getUrlParam()) . json_encode(app('Request')->getUrlParam()) . json_encode(\Request::getUrlParam()));
+//        var_dump('param 0 =>' . $a);
+//        var_dump('param 1 =>' . $b);
     }
 }

@@ -63,3 +63,27 @@ if (!function_exists('app')) {
         return \Bin\App\App::make($class);
     }
 }
+
+if (!function_exists('getKeyByArray')) {
+
+    /**
+     * @power array_search函数的变形，对二维数组中一个字段进行搜索。
+     * todo 该函数遇到第一个匹配就会停止
+     * @param $needle
+     * @param $arr
+     * @param $key_of_search
+     * @return INT|NULL
+     */
+    function getKeyByArray($needle, $arr, $key_of_search)
+    {
+        if (is_array($arr)) {
+            foreach ($arr as $key => $item) {
+                $row = $item;
+                if ($row[$key_of_search] === $needle)
+                    return $key;
+            }
+        }
+        return NULL;
+    }
+
+}

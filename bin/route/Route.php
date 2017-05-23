@@ -114,19 +114,39 @@ class Route
      * @power $url string
      * @return boolean
      */
+//    public function withSuccess($url)
+//    {
+//        //匹配url
+//        $prefixString = preg_replace('/\{.+\}/', '', $this->getPath());
+////        $prefixStringAy = explode('/', $prefixString);
+////        $prefixString = join('\/', $prefixStringAy);
+//        $string = preg_replace($prefixString, '', $url);
+//
+//        var_dump($this->getPath(), $prefixString, $url, $string, 125);
+//        if (1 > strlen($string)) {
+//            return FALSE;
+//        }
+//        if ('/' == $string[0]) {
+//            $string = substr($string, 1, strlen($string) - 1);
+//        }
+//
+//        //todo url 模式匹配
+//        if (TRUE == (preg_match('/^' . join('\/', $this->getPreg()) . '$/', $string, $out) > 0)) {
+//            \Bin\App\App::make(\Bin\Request\Request::class)->setUrlParam(explode('/', $out[0]));
+//            return TRUE;
+//        }
+//
+//        return FALSE;
+//    }
+
     public function withSuccess($url)
     {
-        //从/a/11 => /a/{no}中获取match
-/*        $matchString = preg_replace('/{.+}/', $this->getPreg(), $this->getPath());
-        $matchString = quotemeta(ltrim($matchString, '/'));
-        var_dump($matchString);
-        $matchString = 'pick\/[0-9+]';
-        return preg_match('/' . $matchString . '/', $url);*/
-
         //匹配url
         $prefixString = preg_replace('/\{.+\}/', '', $this->getPath());
-        $string = preg_replace($prefixString, '', $url);
-//        var_dump($prefixString, $url, $string);
+        $prefixStringAy = explode('/', $prefixString);
+        //去掉掉一个空白元素
+        '' == $prefixStringAy[0] && array_shift($prefixStringAy);
+        $string = preg_replace('/' . join('\/', $prefixStringAy) . '[\/]?/', '', $url);
 
         if (1 > strlen($string)) {
             return FALSE;
@@ -134,17 +154,10 @@ class Route
         if ('/' == $string[0]) {
             $string = substr($string, 1, strlen($string) - 1);
         }
-//        var_dump($string, $this->getPreg());
-//        die;
-//        var_dump($prefixString, $this->getPath(), $prefixString . join('/', $this->getPreg()),  $this->getPath());
-//        die;
 
         //todo url 模式匹配
-        //以及注入到闭包以及class的method的参数中
-//        var_dump(join('\/', $this->getPreg()), $string);
-//        die;
         if (TRUE == (preg_match('/^' . join('\/', $this->getPreg()) . '$/', $string, $out) > 0)) {
-            \Bin\App\App::make(\Bin\Request\Request::class)['urlmatch'] = explode('/', $out[0]);
+            \Bin\App\App::make(\Bin\Request\Request::class)->setUrlParam(explode('/', $out[0]));
             return TRUE;
         }
 

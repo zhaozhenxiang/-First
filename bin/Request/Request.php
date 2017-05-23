@@ -58,6 +58,16 @@ class Request implements \ArrayAccess, \Iterator
         return $this->data[$field];
     }
 
+
+    public function setUrlParam(array $v)
+    {
+        return $this->urlMatch = $v;
+    }
+
+    public function getUrlParam()
+    {
+        return $this->urlMatch;
+    }
     public function &__get($key)
     {
         return $this->data[$key];

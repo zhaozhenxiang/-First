@@ -4,6 +4,10 @@ $route::get('/get/callback', function(){
     return __LINE__;
 });
 
+$route::get('/callback/{no}', function($a){
+    return __LINE__ . $a;
+})->with('[0-9]+');
+
 $route::get('/get/view', 'AA@BB');
 $route::get('/rel', 'AA@rel');
 
@@ -45,7 +49,7 @@ $route::get('/get/request', function(){
     var_dump(\Request::getPath());
 });
 
-$route::get('/pick/{no}', 'AA@pick')->with('[0-9]+');
+$route::get('/pick/{no}', 'AA@pickOne')->with('[0-9]+');
 $route::get('/pick2/{no}/{no}', 'AA@pick')->with('[0-9]+')->with('[0-9]+');
 
 //di
@@ -54,3 +58,6 @@ $route::get('/get/di', 'BB@request');
 //var_dump(preg_match('/^\/pick2\/[0-9]+\/[0-9]+$/', '/pick2/1/1'));
 //die;
 
+$route::get('/a/a/{no}', function($a){
+    return $a;
+})->with('[0-9]+');
