@@ -46,6 +46,11 @@ $route::get('/get/request', function(){
 });
 
 $route::get('/pick/{no}', 'AA@pick')->with('[0-9]+');
+$route::get('/pick2/{no}/{no}', 'AA@pick')->with('[0-9]+')->with('[0-9]+');
 
 //di
 $route::get('/get/di', 'BB@request');
+
+//var_dump(preg_match('/^\/pick2\/[0-9]+\/[0-9]+$/', '/pick2/1/1'));
+//die;
+

@@ -27,6 +27,19 @@ class Route
     }
 
     /**
+     * @power 为其中一项数据添加数据
+     * @param array $param
+     */
+    private function addParam($key, $param)
+    {
+        if (!isset($this->param[$key])) {
+            $this->param[$key] = [];
+        }
+
+        $this->param[$key][] = $param;
+    }
+
+    /**
      * @power 获取当前的url
      * @return mixed
      * @throws \Exception
@@ -75,7 +88,8 @@ class Route
      */
     public function with($preg)
     {
-        $this->mergeParam(['preg' => $preg]);
+        $this->addParam('preg', $preg);
+        return $this;
     }
 
     /**
@@ -111,18 +125,26 @@ class Route
 
         //匹配url
         $prefixString = preg_replace('/\{.+\}/', '', $this->getPath());
-
         $string = preg_replace($prefixString, '', $url);
+//        var_dump($prefixString, $url, $string);
+
         if (1 > strlen($string)) {
             return FALSE;
         }
         if ('/' == $string[0]) {
             $string = substr($string, 1, strlen($string) - 1);
         }
+//        var_dump($string, $this->getPreg());
+//        die;
+//        var_dump($prefixString, $this->getPath(), $prefixString . join('/', $this->getPreg()),  $this->getPath());
+//        die;
 
-
-        if (TRUE == preg_match('/' . $this->getPreg() . '/', $string) > 0) {
-            \Bin\App\App::make(\Bin\Request\Request::class)['urlmatch'] = $string;
+        //todo url 模式匹配
+        //以及注入到闭包以及class的method的参数中
+//        var_dump(join('\/', $this->getPreg()), $string);
+//        die;
+        if (TRUE == (preg_match('/^' . join('\/', $this->getPreg()) . '$/', $string, $out) > 0)) {
+            \Bin\App\App::make(\Bin\Request\Request::class)['urlmatch'] = explode('/', $out[0]);
             return TRUE;
         }
 

@@ -45,6 +45,6 @@ class AA extends BaseController
 
     public function pick()
     {
-        var_dump(__FILE__ . __FUNCTION__ . 'request => ' . \Bin\App\App::make(\Bin\Request\Request::class)['urlmatch']);
+        var_dump(__FILE__ . __FUNCTION__ . 'request => ' . json_encode(\Bin\App\App::make(\Bin\Request\Request::class)['urlmatch']));
     }
 }

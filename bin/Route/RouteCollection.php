@@ -60,6 +60,7 @@ class RouteCollection /*implements \Iterator*/
 
     private static function match($method, $path)
     {
+
         foreach (self::$route as $key => $value) {
             //需要index.php来控制rewrite
 //            if ($value['method'] == $method && ($value['path'] === $path || '/index.php' . $value['path'] === $path)) {
@@ -72,8 +73,6 @@ class RouteCollection /*implements \Iterator*/
             if (FALSE == is_null($value->getPreg())) {
                 if (TRUE == $value->withSuccess((\Bin\App\App::make(\Bin\Request\Request::class)->getPath()))) {
                     return $value;
-//                } else {
-//                    throw new \Exception("ROUTE NO MATCH, preg is error", 1);
                 }
             }
         }

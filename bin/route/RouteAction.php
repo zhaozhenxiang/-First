@@ -69,7 +69,6 @@ class RouteAction
         $re = app(Reflection::class);
         $class = '\App\Controllers\\' . $class;
 
-        var_dump($re);
         //反射的类,查看该文件是否存在
         $reClass = $re->getAbstractReflectionClass($class);
         //todo 没有处理class的构造函数的参数

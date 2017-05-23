@@ -9,6 +9,7 @@
 namespace App\Controllers;
 
 use \Bin\Request\Request;
+
 class BB
 {
     public function __construct()
