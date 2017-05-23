@@ -19,7 +19,11 @@ class Request implements \ArrayAccess, \Iterator
     //初始化信息
     public function __construct()
     {
-//        is_null(self::$instance) && self::$instance = new static;
+        foreach ($_REQUEST as $key => $item) {
+            $this->$key = $item;
+        }
+
+
     }
 
     //获取头信息
@@ -64,6 +68,10 @@ class Request implements \ArrayAccess, \Iterator
         return $this->urlMatch = $v;
     }
 
+    public function all()
+    {
+        return $this->data;
+    }
     public function getUrlParam()
     {
         return $this->urlMatch;

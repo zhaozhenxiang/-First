@@ -24,6 +24,6 @@ class BB
 
     public function request(Request $a)
     {
-        var_dump($a);
+        var_dump($a, $a->a, $a->all());
     }
 }
