@@ -1,9 +1,15 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Bin\Route;
+
+use Bin\App\App;
+use Bin\Request\Request;
 
 class Route
 {
-    private $param = [];
+    private array $param = [];
 
     public function __construct($method, $path, $action)
     {
@@ -18,7 +24,7 @@ class Route
     }
 
     /**
-     * @power 合并数据
+     *  合并数据
      * @param array $param
      */
     private function mergeParam(array $param)
@@ -27,7 +33,7 @@ class Route
     }
 
     /**
-     * @power 为其中一项数据添加数据
+     *  为其中一项数据添加数据
      * @param array $param
      */
     private function addParam($key, $param)
@@ -40,7 +46,7 @@ class Route
     }
 
     /**
-     * @power 获取当前的url
+     *  获取当前的url
      * @return mixed
      * @throws \Exception
      */
@@ -50,7 +56,7 @@ class Route
     }
 
     /**
-     * @power 获取当前的METHOD
+     *  获取当前的METHOD
      * @return mixed
      * @throws \Exception
      */
@@ -61,7 +67,7 @@ class Route
 
 
     /**
-     * @power 获取当前的action
+     *  获取当前的action
      * @return mixed
      * @throws \Exception
      */
@@ -72,19 +78,19 @@ class Route
 
 
     /**
-     * @power 获取当前的middle
+     *  获取当前的middle
      * @return mixed
      * @throws \Exception
      */
     public function getMiddle()
     {
-        return isset($this->param['middle']) ? $this->param['middle'] : NULL;
+        return $this->param['middle'] ?? null;
     }
 
     /**
-     * @power 判断url是否满足正则
+     *  判断url是否满足正则
      * @param $preg
-     * @return boolean
+     * @return \Bin\Route\Route
      */
     public function with($preg)
     {
@@ -93,7 +99,7 @@ class Route
     }
 
     /**
-     * @power 设置middle
+     *  设置middle
      * @param array $middle
      */
     public function middle(array $middle)
@@ -102,17 +108,19 @@ class Route
     }
 
     /**
-     * @power 获取正则表达式
+     *  获取正则表达式
      * @return null|string
      */
     public function getPreg()
     {
-        return isset($this->param['preg']) ? $this->param['preg'] : NULL;
+        return $this->param['preg'] ?? null;
     }
     /**
-     * @power 判断url是否满足正则
-     * @power $url string
+     *  判断url是否满足正则
+     *  $url string
+     * @param $url
      * @return boolean
+     * @throws \Exception
      */
 //    public function withSuccess($url)
 //    {
@@ -124,19 +132,19 @@ class Route
 //
 //        var_dump($this->getPath(), $prefixString, $url, $string, 125);
 //        if (1 > strlen($string)) {
-//            return FALSE;
+//            return false;
 //        }
 //        if ('/' == $string[0]) {
 //            $string = substr($string, 1, strlen($string) - 1);
 //        }
 //
 //        //todo url 模式匹配
-//        if (TRUE == (preg_match('/^' . join('\/', $this->getPreg()) . '$/', $string, $out) > 0)) {
+//        if (true == (preg_match('/^' . join('\/', $this->getPreg()) . '$/', $string, $out) > 0)) {
 //            \Bin\App\App::make(\Bin\Request\Request::class)->setUrlParam(explode('/', $out[0]));
-//            return TRUE;
+//            return true;
 //        }
 //
-//        return FALSE;
+//        return false;
 //    }
 
     public function withSuccess($url)
@@ -149,19 +157,19 @@ class Route
         $string = preg_replace('/' . join('\/', $prefixStringAy) . '[\/]?/', '', $url);
 
         if (1 > strlen($string)) {
-            return FALSE;
+            return false;
         }
         if ('/' == $string[0]) {
             $string = substr($string, 1, strlen($string) - 1);
         }
 
         //todo url 模式匹配
-        if (TRUE == (preg_match('/^' . join('\/', $this->getPreg()) . '$/', $string, $out) > 0)) {
-            \Bin\App\App::make(\Bin\Request\Request::class)->setUrlParam(explode('/', $out[0]));
-            return TRUE;
+        if (true == (preg_match('/^' . join('\/', $this->getPreg()) . '$/', $string, $out) > 0)) {
+            App::make(Request::class)->setUrlParam(explode('/', $out[0]));
+            return true;
         }
 
-        return FALSE;
+        return false;
     }
 
 

@@ -1,19 +1,25 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Controllers;
 
 use \App\Model\User;
+use Bin\Reflection\Reflect;
+use Bin\View\View;
 
 class AA extends BaseController
 {
-    use \Bin\Reflection\Reflect;
+    use Reflect;
 
     public function BB()
     {
-        return \Bin\View\View::make('index.php')->with('a', User::select('select * from test', 'data'));
+        return View::make('index.php')->with('a', User::select('select * from test', 'data'));
     }
 
     public function rel()
     {
+        return 'rel';
         $class = $this->getAbstractReflectionClass('\App\Controllers\BB');
         var_dump($class);
         var_dump($class->isInstantiable());
@@ -35,7 +41,7 @@ class AA extends BaseController
 
     public function postA()
     {
-        return __FILE__ . json_encode($_POST);
+        return __FILE__ . json_encode($_POST, JSON_THROW_ON_ERROR);
     }
 
     public function middle()

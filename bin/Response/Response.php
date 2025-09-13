@@ -1,77 +1,77 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bin\Response;
+
+use Bin\View\Compiler;
+use Bin\View\View;
 
 class Response
 {
-    //设置数据
-    private $originContent = '';
+    private $originContent;
 
     /**
-     * @todo 之后要把该函数的实现改成工厂模式
      * @param $response
      * @throws \Exception
+     * @todo 之后要把该函数的实现改成工厂模式
      */
-    public function __construct($response = NULL)
+    public function __construct($response = null)
     {
-        if (NULL == $response) {
-            return;
-        }
         //根据response类型来获取数据
         if (is_string($response)) {
-            return $this->originContent = $response;
+            $this->originContent = $response;
         }
 
         if (is_array($response)) {
-            return $this->originContent = json_encode($response, 1);
+            $this->originContent = json_encode($response, JSON_THROW_ON_ERROR);
         }
 
         //todo 处理编译view的问题
-        if ($response instanceof \Bin\View\View) {
-            return $this->originContent = (new \Bin\View\Compiler($response))->getPHP();
+        if ($response instanceof View) {
+            $this->originContent = (new Compiler($response))->getPHP();
         }
-
         //todo 处理active record
     }
 
     /**
-     * @power 获取content
+     *  获取content
      * @return string
      */
-    public function getContent()
+    public function getContent(): string
     {
-        return $this->originContent;
+        return (string)$this->originContent;
     }
 
     /**
-     * @power 设置content
-     * @param $string
-     * @return mixed
+     *  设置content
+     * @param  mixed  $string
+     * @return self
      */
-    public function setContent($string)
+    public function setContent(mixed $string): self
     {
-        return $this->originContent = $string;
+        $this->originContent = $string;
+        return $this;
     }
 
     /**
-     * @power 获取数据
+     *  获取数据
      * @return string
      */
-    public function __tostring()
+    public function __toString()
     {
         return $this->getContent();
     }
 
     /**
-     * @power 设置状态
-     * @param $httpStatus
-     * @param string $content
-     * @return string
-     * @throws \Exception
+     *  设置状态
+     * @param  int     $httpStatus
+     * @param  string  $content
+     * @return self
      */
-    public function setStatus($httpStatus, $content = NULL)
+    public function setStatus(int $httpStatus, string $content): self
     {
-        $status = array(
+        $status = [
             // Informational 1xx
             100 => 'Continue',
             101 => 'Switching Protocols',
@@ -118,16 +118,19 @@ class Response
             503 => 'Service Unavailable',
             504 => 'Gateway Timeout',
             505 => 'HTTP Version Not Supported',
-            509 => 'Bandwidth Limit Exceeded'
-        );
+            509 => 'Bandwidth Limit Exceeded',
+        ];
         if (array_key_exists($httpStatus, $status)) {
             header('HTTP/1.1 ' . $httpStatus . ' ' . $status[$httpStatus]);
         }
 
-        if (NULL == $content) {
-            return $this->originContent = (string) \Bin\View\View::make($httpStatus);
+        if (null == $content) {
+            $this->originContent = (string)View::make($httpStatus);
+            return $this;
         }
 
-        return $this->setContent($content);
+        $this->setContent($content);
+
+        return $this;
     }
 }

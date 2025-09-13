@@ -1,40 +1,48 @@
 <?php
-$route = new \Bin\Route\RouteCollection();
-$route::get('/get/callback', function(){
+
+declare(strict_types=1);
+
+use App\Model\User;
+use Bin\App\App;
+use Bin\Request\Request;
+use Bin\Response\Response;
+use Bin\Route\RouteCollection as Route;
+
+Route::get('/get/callback', function(){
     return __LINE__;
 });
 
-$route::get('/callback/{no}', function($a){
+Route::get('/callback/{no}', function($a){
     return __LINE__ . $a;
 })->with('[0-9]+');
 
-$route::get('/get/view', 'AA@BB');
-$route::get('/rel', 'AA@rel');
+Route::get('/get/view', 'AA@BB');
+Route::get('/rel', 'AA@rel');
 
 //post请求
-$route::post('/post/1', 'AA@postA');
+Route::post('/post/1', 'AA@postA');
 
 //处理middle相关的代码
-$route::middle(['a' => [1, 2]], function() use ($route){
-    $route::get('/middle/1', 'AA@middle');
+Route::middle(['a' => [1, 2]], function(){
+    Route::get('/middle/1', 'AA@middle');
 });
 
 //todo 处理多个router
-$route::getArray(['/rel1' => 'AA@rel', '/a' => 'AA@postA']);
+Route::getArray(['/rel1' => 'AA@rel', '/a' => 'AA@postA']);
 
 //设置status
-$route::get('/get/200', function(){
-    return ((new \Bin\Response\Response())->setStatus('200'));
+Route::get('/get/200', function(){
+    return ((new Response())->setStatus('200'));
 });
 
 //使用app容器类
-$route::get('/get/app', function(){
-    var_dump(\Bin\App\App::make(\App\Model\User::class) === \Bin\App\App::make(\App\Model\User::class));
+Route::get('/get/app', function(){
+    var_dump(App::make(User::class) === App::make(User::class));
 });
 
 //request
-$route::get('/get/request', function(){
-    $a = new \Bin\Request\Request;
+Route::get('/get/request', function(){
+    $a = new Request;
     var_dump($a->getHeader());
     var_dump($a->getPath());
     var_dump($a->getStartTime());
@@ -49,15 +57,15 @@ $route::get('/get/request', function(){
     var_dump(\Request::getPath());
 });
 
-$route::get('/pick/{no}', 'AA@pickOne')->with('[0-9]+');
-$route::get('/pick2/{no}/{no}', 'AA@pick')->with('[0-9]+')->with('[0-9]+');
+Route::get('/pick/{no}', 'AA@pickOne')->with('[0-9]+');
+Route::get('/pick2/{no}/{no}', 'AA@pick')->with('[0-9]+')->with('[0-9]+');
 
 //di
-$route::get('/get/di', 'BB@request');
+Route::get('/get/di', 'BB@request');
 
 //var_dump(preg_match('/^\/pick2\/[0-9]+\/[0-9]+$/', '/pick2/1/1'));
 //die;
 
-$route::get('/a/a/{no}', function($a){
+Route::get('/a/a/{no}', function($a){
     return $a;
 })->with('[0-9]+');

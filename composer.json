@@ -10,7 +10,8 @@
   ],
   "minimum-stability": "dev",
   "require": {
-    "php": ">=5.5.9"
+    "php": ">=8.3",
+    "ext-pdo": "*"
   },
   "autoload": {
     "classmap": [
@@ -20,7 +21,7 @@
       "Bin\\": "bin/"
     },
     "files": [
-      "bin/func/helpers.php"
+      "bin/Func/helpers.php"
     ]
   }
 }

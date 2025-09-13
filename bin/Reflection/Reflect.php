@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Bin\Reflection;
 
 trait Reflect
@@ -25,7 +28,7 @@ trait Reflect
     }
 
     /**
-     * @power 根据class得到反射类
+     *  根据class得到反射类
      * @param $class
      * @return null|\ReflectionClass
      */
@@ -33,9 +36,9 @@ trait Reflect
     {
         //@todo 先在self::$class里面查找
         $keys = array_keys(self::$classReflection);
-        $search = array_search($class, $keys);
+        $search = array_search($class, $keys, true);
 
-        if (FALSE !== $search) {
+        if (false !== $search) {
             return self::$class[$keys[$search]];
         } else {
             unset($keys);
@@ -46,7 +49,7 @@ trait Reflect
         try {
             $reflection = new \ReflectionClass($class);
         } catch(\Exception $e) {
-            return NULL;
+            return null;
         }
 
         $this->setClassReflection($class, $reflection);
@@ -55,7 +58,7 @@ trait Reflect
     }
 
     /*
-     * @power 设置class的反射类
+     *  设置class的反射类
      * @return void
      */
     private function setClassReflection($class, \ReflectionClass $classInstance = null)
@@ -64,7 +67,7 @@ trait Reflect
         self::$classReflection[$class] = $classInstance;
     }
     /*
-     * @power 设置class的实例
+     *  设置class的实例
      * @return void
      */
     private function setClassInstance($class, $classInstance = null)
@@ -74,7 +77,7 @@ trait Reflect
     }
 
     /*
-     * @power 设置class的实例
+     *  设置class的实例
      * @return void
      */
     private function setClassMethod($class, $method = null, array $param = null)

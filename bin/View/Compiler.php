@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Bin\View;
 
 class Compiler
@@ -10,7 +13,7 @@ class Compiler
         $this->view = $view;
     }
 
-    public function getPHP()
+    public function getPHP():string
     {
         try {
             extract($this->view->getData());

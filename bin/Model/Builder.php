@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+namespace Bin\Model;
+
 class Builder
 {
     public function get()

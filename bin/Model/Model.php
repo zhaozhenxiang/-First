@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Bin\Model;
 abstract class Model
 {
@@ -14,12 +17,13 @@ abstract class Model
 
     public static function getConnection()
     {
-        if (!is_null(self::$connection)) {
+        if (null !== self::$connection) {
             return self::$connection;
         }
 
         $config = self::getDBConfig();
-        if (empty($config) || is_null($config['host']) || is_null($config['port']) || is_null($config['pass']) || is_null($config['user']) || is_null($config['dbname'])) {
+
+        if (empty($config) || $config['host'] === null || $config['port'] === null || $config['pass'] === null || $config['user'] === null || $config['dbname'] === null) {
             throw new \Exception('DB Config is invalid');
         }
 
@@ -40,17 +44,17 @@ abstract class Model
         return array_merge(config('db:connection:' . $driver), ['driver' => $driver, 'resultType' => self::$resultType]);
     }
 
-    public final static function select($sql, $data)
+    final public static function select($sql, $data)
     {
         return self::action($sql, $data);
     }
 
-    public final static function update($sql, $data)
+    final public static function update($sql, $data)
     {
         return self::action($sql, $data);
     }
 
-    public final static function delete($sql, $data)
+    final public static function delete($sql, $data)
     {
         return self::action($sql, $data);
     }

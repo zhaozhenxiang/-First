@@ -1,12 +1,15 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Bin\View;
 
 class View
 {
-    const viewPath = BASE_PATH . '/views/';
-    const viewSuffix = '.php';
-    private static $targetView;
-    private static $targetData = [];
+    public const string viewPath = BASE_PATH . '/views/';
+    public const string viewSuffix = '.php';
+    private static string $targetView;
+    private static array $targetData = [];
     private static $instance;
 
 
@@ -16,41 +19,51 @@ class View
     }
 
     /**
-     * @power 处理path
+     *  处理path
      * @param $path
      * @return View
      */
     public static function make($path)
     {
-        if (FALSE == preg_match('/.+?\.php/', $path)) {
-            $path .= \Bin\View\View::viewSuffix;
+        if (false == preg_match('/.+?\.php/', $path)) {
+            $path .= self::viewSuffix;
         }
 
         self::$targetView = self::viewPath . $path;
 
-        return is_null(self::$instance) ? new self : self::$instance;
+        return self::$instance ?? new self;
     }
 
-    public function with($key, $value)
+    public function with($key, $value): self
     {
-        if (is_null(self::$targetView)) {
+        if (null === self::$targetView) {
             throw new \Exception('WITH must after the MAKE', 1);
         }
+
         self::$targetData[$key] = $value;
 
         return $this;
     }
 
-    public function getView()
+    /**
+     *
+     * @return string
+     */
+    public function getView(): string
     {
         return self::$targetView;
     }
 
-    public function getData()
+    public function getData(): array
     {
         return self::$targetData;
     }
 
+    /**
+     *
+     * @return string
+     * @throws \Exception
+     */
     public function __toString()
     {
         return (new Compiler($this))->getPHP();

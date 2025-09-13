@@ -1,17 +1,25 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Bin\Route;
+
+use Bin\App\App;
+use Bin\Request\Request;
+use Exception;
 
 class RouteCollection /*implements \Iterator*/
 {
     //使用单例模式
     private static $instance;
-    private static $route = [];
-    private static $method = [
+    private static array $route = [];
+    private static array $method = [
         'get',
-        'post'
+        'post',
     ];
 
-    private static $routeIndex = NULL;
+    private static $routeIndex = null;
+
     public function __construct()
     {
         // if (self::$instance instanceof $this) {
@@ -20,37 +28,37 @@ class RouteCollection /*implements \Iterator*/
 
     }
 
-//    public function current()
-//    {
-//
-//    }
-//
-//    public function next()
-//    {
-//
-//    }
-//
-//    public function key()
-//    {
-//
-//    }
-//
-//    public function valid()
-//    {
-//
-//    }
-//
-//    public function rewind()
-//    {
-//
-//    }
+    //    public function current()
+    //    {
+    //
+    //    }
+    //
+    //    public function next()
+    //    {
+    //
+    //    }
+    //
+    //    public function key()
+    //    {
+    //
+    //    }
+    //
+    //    public function valid()
+    //    {
+    //
+    //    }
+    //
+    //    public function rewind()
+    //    {
+    //
+    //    }
 
     /**
-     * @power 获取匹配到的路由
-     * @return mixed
+     *  获取匹配到的路由
+     * @return \Bin\Route\Route|null
      * @throws \Exception
      */
-    public static function getRoute()
+    public static function getRoute(): ?Route
     {
         $path = getUrl();
         $method = getMethod();
@@ -58,26 +66,34 @@ class RouteCollection /*implements \Iterator*/
         return self::match($method, $path);
     }
 
-    private static function match($method, $path)
+    /**
+     * 匹配路由
+     * @param  string  $method
+     * @param  string  $path
+     * @return \Bin\Route\Route|null
+     * @throws \Exception
+     * @static
+     */
+    private static function match(string $method, string $path): ?Route
     {
+        foreach (self::$route as $route) {
+            //if (false === self::$route instanceof self) {
+            //    continue;
+            //}
 
-        foreach (self::$route as $key => $value) {
-            //需要index.php来控制rewrite
-//            if ($value['method'] == $method && ($value['path'] === $path || '/index.php' . $value['path'] === $path)) {
-            if ($value->getMethod() == $method && ($value->getPath() === $path || '/index.php' . $value->getPath() === $path)) {
-                return $value;
+            if ($route->getMethod() == $method && $route->getPath() === $path) {
+                return $route;
             }
 
-//            var_dump($value, $value->getPreg());
             //判断是否存在preg
-            if (FALSE == is_null($value->getPreg())) {
-                if (TRUE == $value->withSuccess((\Bin\App\App::make(\Bin\Request\Request::class)->getPath()))) {
-                    return $value;
+            if (null !== $route->getPreg()) {
+                if ($route->withSuccess((App::make(Request::class)->getPath()))) {
+                    return $route;
                 }
             }
         }
 
-        throw new \Exception("ROUTE NO MATCH", 1);
+        throw new \Exception('ROUTE NO MATCH', 1);
     }
 
     /*    public function getInstance()
@@ -92,16 +108,17 @@ class RouteCollection /*implements \Iterator*/
 
     private static function action($method, $path, $action)
     {
-//        $action = new Route(['method' => $method, 'path' => $path, 'action' => $action]);
+        //        $action = new Route(['method' => $method, 'path' => $path, 'action' => $action]);
         $action = new Route($method, $path, $action);
         array_push(self::$route, $action);
+
         return $action;
     }
 
     /**
-     * @power 处理middle
-     * @param array $param
-     * @param \Closure $callback
+     *  处理middle
+     * @param  array     $param
+     * @param  \Closure  $callback
      */
     public static function middle(array $param, \Closure $callback)
     {
@@ -117,8 +134,8 @@ class RouteCollection /*implements \Iterator*/
     }
 
     /**
-     * @power 处理多个get的router
-     * @param array $param
+     *  处理多个get的router
+     * @param  array  $param
      */
     public static function getArray(array $param)
     {
@@ -130,7 +147,7 @@ class RouteCollection /*implements \Iterator*/
     public static function __callStatic($method, $param)
     {
         if (!in_array(strtolower($method), self::$method)) {
-            throw new Exception("REQUEST METHOD NOT MATCH", 1);
+            throw new Exception('REQUEST METHOD NOT MATCH', 1);
         }
 
         //@todo 解析$param 。 这的param应该是array

@@ -1,11 +1,6 @@
 <?php
 
-/************************************************************
- * Copyright (C), 2015-2016, Everyoo Tech. Co., Ltd.
- * @FileName: Facade.php
- * @Author: zhaozhenxiang       Version :   V.1.0.0       Date: 2017/5/18
- * @Description:     // 模块描述
- ***********************************************************/
+declare(strict_types=1);
 
 namespace Bin\Facade;
 
@@ -13,7 +8,7 @@ abstract class Facade
 {
     private static $instance = [];
     //返回class名字
-    protected abstract function getClassName();
+    abstract protected function getClassName();
 
     public static function __callStatic($method, $args)
     {

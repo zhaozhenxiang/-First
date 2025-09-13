@@ -1,8 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Bin\Route;
 
+use App\Middleware\Middle;
 use Bin\Response\Response;
 use \Bin\Reflection\Reflection;
+use Exception;
 
 class RouteAction
 {
@@ -11,47 +16,56 @@ class RouteAction
 
     }
 
+    /**
+     * 执行
+     * @return \Bin\Response\Response|mixed|void
+     * @throws \Exception
+     * @static
+     */
     public static function action()
     {
-        $actionAy = RouteCollection::getRoute();
+        $route = RouteCollection::getRoute();
+
+        if (null === $route) {
+            abort(404);
+        }
 
         //先处理middle
-        if (FALSE == is_null($actionAy->getMiddle())) {
-            $param = $actionAy->getMiddle();
-            if (1 != count($param)) {
+        if (null !== $route->getMiddle()) {
+            $param = $route->getMiddle();
+
+            if (1 !== count($param)) {
                 throw new \Exception('middle param count must one');
             }
             //查看是否存在
-            $class = (new \App\Middleware\Middle())->getClass(array_keys($param['middle'])[0]);
-            if (FALSE == $class) {
+            $class = (new Middle())->getClass(array_keys($param['middle'])[0]);
+            if (false == $class) {
                 throw new \Exception('middleware miss');
             }
             //key为middleware名字，value为middleware参数
             $handleResult = (new $class)->run(array_shift($param));
 
-            if (TRUE !== $handleResult) {
-                return new \Bin\Response\Response($handleResult);
+            if (true !== $handleResult) {
+                return new Response($handleResult);
             }
         }
 
-        //处理闭包
-        if (is_callable($actionAy->getAction())) {
-            return self::doCallBack($actionAy->getAction());
+        if (is_callable($route->getAction())) {
+            return self::doCallBack($route->getAction());
         }
-        //处理常规
-        if (is_string($actionAy->getAction())) {
-            list($class, $method) = explode('@', $actionAy->getAction());
+
+        if (is_string($route->getAction())) {
+            [$class, $method] = explode('@', $route->getAction());
             return self::doClassMethod($class, $method);
         }
 
-
-        throw new Exception("404", 1);
+        abort(404);
     }
 
     private static function doCallBack(callable $action)
     {
 
-        return call_user_func_array($action, app(\Bin\Reflection\Reflection::class)->getCallBackParam($action));
+        return call_user_func_array($action, app(Reflection::class)->getCallBackParam($action));
         return $action(app('Request')->getUrlParam()[0]);
 //        return $action();
     }
@@ -67,9 +81,18 @@ class RouteAction
 //        echo new Response($response);
 //    }
 //
-    private static function doClassMethod($class, $method)
+    /**
+     * 执行控制器方法
+     * @param  string  $class
+     * @param  string  $method
+     * @return \Bin\Response\Response
+     * @throws \Exception
+     * @static
+     */
+    private static function doClassMethod(string $class, string $method): Response
     {
         $class = '\App\Controllers\\' . $class;
-        echo new Response(call_user_func_array(array(new $class, $method), app(Reflection::class)->getClassMethodParamInject($class, $method)));
+
+        return new Response(call_user_func_array([new $class, $method], app(Reflection::class)->getClassMethodParamInject($class, $method)));
     }
 }
